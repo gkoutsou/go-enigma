@@ -46,3 +46,13 @@ func TestRotate26(t *testing.T) {
 	require.Equal(t, int8(1), r.currentPos)
 	require.True(t, rotateNext)
 }
+
+func TestPassA_WhenA(t *testing.T) {
+	r := RotorIII
+	r.init(2)
+
+	input := rune2Int('A')
+	output := r.Pass(input)
+	require.Equal(t, "C", string(int2rune(output)))
+
+}

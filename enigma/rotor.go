@@ -36,11 +36,43 @@ func (r *Rotor) init(pos int8) {
 }
 
 func (r *Rotor) Pass(character int8) int8 {
-	return r.mapping[character+r.currentPos-1]
+	position := character + (r.currentPos - 1)
+	if position > 26 {
+		position -= 26
+	}
+
+	output := r.mapping[position] - (r.currentPos - 1)
+	if output <= 0 {
+		output += 26
+	}
+
+	if output <= 0 {
+		panic("ohnoes")
+	}
+	if output > 26 {
+		panic("ohnoes2")
+	}
+	return output
 }
 
 func (r *Rotor) PassBack(character int8) int8 {
-	return r.mappingBack[character+r.currentPos-1]
+	position := character + (r.currentPos - 1)
+	if position > 26 {
+		position -= 26
+	}
+
+	output := r.mappingBack[position] - (r.currentPos - 1)
+	if output <= 0 {
+		output += 26
+	}
+
+	if output <= 0 {
+		panic("ohnoes")
+	}
+	if output > 26 {
+		panic("ohnoes2")
+	}
+	return output
 }
 
 // I: EKMFLGDQVZNTOWYHXUSPAIBRCJ notch: R

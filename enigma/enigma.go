@@ -1,6 +1,8 @@
 package enigma
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Machine struct {
 	RotorA    *Rotor
@@ -19,7 +21,7 @@ func (e *Machine) rotate() {
 		}
 	}
 
-	fmt.Printf("rotor position: %c%c%c\n", int2rune(e.RotorC.currentPos), int2rune(e.RotorB.currentPos), int2rune(e.RotorA.currentPos))
+	// fmt.Printf("rotor position: %c%c%c\n", int2rune(e.RotorC.currentPos), int2rune(e.RotorB.currentPos), int2rune(e.RotorA.currentPos))
 }
 
 func (e *Machine) Init(c, b, a int8) {
@@ -46,6 +48,15 @@ func (e *Machine) Press(inputChar rune) rune {
 	fmt.Printf("rotor encryption: %c->%c->%c->%c->%c->%c->%c\n", int2rune(outputA), int2rune(outputB), int2rune(outputC), int2rune(outputR), int2rune(outputC2), int2rune(outputB2), int2rune(outputA2))
 
 	return int2rune(outputA2)
+}
+
+func (e *Machine) Type(text string) string {
+	var chars []rune
+	for _, c := range text {
+		chars = append(chars, e.Press(c))
+	}
+
+	return string(chars)
 }
 
 func int2rune(i int8) rune {

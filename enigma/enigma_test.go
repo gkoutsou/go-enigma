@@ -71,3 +71,82 @@ func TestRotateEnd(t *testing.T) {
 	require.Equal(t, int8(1), e.RotorB.currentPos)
 	require.Equal(t, int8(1), e.RotorC.currentPos)
 }
+
+func TestPressFromAAZ(t *testing.T) {
+	cases := []struct {
+		input  rune
+		output rune
+	}{
+		{input: 'A', output: 'U'},
+		{input: 'B', output: 'E'},
+		{input: 'C', output: 'J'},
+		{input: 'U', output: 'A'},
+		{input: 'Z', output: 'H'},
+	}
+
+	for _, test := range cases {
+		t.Run(fmt.Sprintf("Char=%c", test.input), func(t *testing.T) {
+			enigma := Machine{
+				RotorA:    &RotorIII,
+				RotorB:    &RotorII,
+				RotorC:    &RotorI,
+				Reflector: ReflectorB,
+			}
+
+			enigma.Init(1, 1, 26)
+
+			require.Equal(t, test.output, enigma.Press(test.input))
+		})
+	}
+}
+
+func TestPressFromAAA(t *testing.T) {
+	cases := []struct {
+		input  rune
+		output rune
+	}{
+		{input: 'A', output: 'B'},
+		{input: 'A', output: 'B'},
+	}
+
+	for _, test := range cases {
+		t.Run(fmt.Sprintf("%c->%c", test.input, test.output), func(t *testing.T) {
+			enigma := Machine{
+				RotorA:    &RotorIII,
+				RotorB:    &RotorII,
+				RotorC:    &RotorI,
+				Reflector: ReflectorB,
+			}
+
+			enigma.Init(1, 1, 1)
+
+			require.Equal(t, string(test.output), string(enigma.Press(test.input)))
+		})
+	}
+}
+
+func TestTypeFromAAA(t *testing.T) {
+	cases := []struct {
+		input  string
+		output string
+	}{
+		{input: "ABCDE", output: "BJELR"},
+		{input: "THEQUICKBROWNFOX", output: "OPCILLAZFXLQTDNL"},
+		{input: "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG", output: "OPCILLAZFXLQTDNLGGLEKDIZOKQKGXIEZKD"},
+	}
+
+	for _, test := range cases {
+		t.Run(fmt.Sprintf("%s->%s", test.input, test.output), func(t *testing.T) {
+			enigma := Machine{
+				RotorA:    &RotorIII,
+				RotorB:    &RotorII,
+				RotorC:    &RotorI,
+				Reflector: ReflectorB,
+			}
+
+			enigma.Init(1, 1, 1)
+
+			require.Equal(t, test.output, enigma.Type(test.input))
+		})
+	}
+}

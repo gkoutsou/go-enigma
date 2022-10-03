@@ -40,7 +40,7 @@ func main() {
 		Reflector: enigma.ReflectorB,
 	}
 
-	enigma.Init(1, 1, 26)
+	enigma.Init(1, 1, 1)
 
-	fmt.Printf("%c", enigma.Press('A'))
+	fmt.Printf("%s", enigma.Type("ABCDE"))
 }
