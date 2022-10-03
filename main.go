@@ -21,17 +21,26 @@ import (
 func main() {
 	// rotorI := "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
 
-	enigma := enigma.Machine{
-		RotorA: &enigma.RotorIII,
-		RotorB: &enigma.RotorII,
-		RotorC: &enigma.RotorI,
-	}
+	// enigma := enigma.Machine{
+	// 	RotorA: &enigma.RotorI,
+	// 	RotorB: &enigma.RotorII,
+	// 	RotorC: &enigma.RotorIII,
+	// }
 
-	enigma.Init(26, 1, 1)
+	// enigma.Init(1, 1, 1)
 
-	fmt.Printf("%c", enigma.Press('A'))
 	// A => H
 	// B => I
 	// C => L
 
+	enigma := enigma.Machine{
+		RotorA:    &enigma.RotorIII,
+		RotorB:    &enigma.RotorII,
+		RotorC:    &enigma.RotorI,
+		Reflector: enigma.ReflectorB,
+	}
+
+	enigma.Init(1, 1, 26)
+
+	fmt.Printf("%c", enigma.Press('A'))
 }

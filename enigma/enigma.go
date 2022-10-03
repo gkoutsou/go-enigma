@@ -3,9 +3,10 @@ package enigma
 import "fmt"
 
 type Machine struct {
-	RotorA *Rotor
-	RotorB *Rotor
-	RotorC *Rotor
+	RotorA    *Rotor
+	RotorB    *Rotor
+	RotorC    *Rotor
+	Reflector Reflector
 }
 
 func (e *Machine) rotate() {
@@ -21,10 +22,12 @@ func (e *Machine) rotate() {
 	fmt.Printf("rotor position: %c%c%c\n", int2rune(e.RotorC.currentPos), int2rune(e.RotorB.currentPos), int2rune(e.RotorA.currentPos))
 }
 
-func (e *Machine) Init(a, b, c int8) {
+func (e *Machine) Init(c, b, a int8) {
 	e.RotorA.init(a)
 	e.RotorB.init(b)
 	e.RotorC.init(c)
+
+	e.Reflector.init()
 }
 
 func (e *Machine) Press(inputChar rune) rune {
@@ -35,10 +38,14 @@ func (e *Machine) Press(inputChar rune) rune {
 	outputA := e.RotorA.Pass(input)
 	outputB := e.RotorB.Pass(outputA)
 	outputC := e.RotorC.Pass(outputB)
+	outputR := e.Reflector.Pass(outputC)
+	outputC2 := e.RotorC.PassBack(outputR)
+	outputB2 := e.RotorB.PassBack(outputC2)
+	outputA2 := e.RotorA.PassBack(outputB2)
 
-	fmt.Printf("rotor encryption: %c->%c->%c\n", int2rune(outputA), int2rune(outputB), int2rune(outputC))
+	fmt.Printf("rotor encryption: %c->%c->%c->%c->%c->%c->%c\n", int2rune(outputA), int2rune(outputB), int2rune(outputC), int2rune(outputR), int2rune(outputC2), int2rune(outputB2), int2rune(outputA2))
 
-	return int2rune(outputC)
+	return int2rune(outputA2)
 }
 
 func int2rune(i int8) rune {
