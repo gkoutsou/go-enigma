@@ -46,12 +46,6 @@ func (r *Rotor) Pass(character int8) int8 {
 		output += 26
 	}
 
-	if output <= 0 {
-		panic("ohnoes")
-	}
-	if output > 26 {
-		panic("ohnoes2")
-	}
 	return output
 }
 
@@ -66,12 +60,6 @@ func (r *Rotor) PassBack(character int8) int8 {
 		output += 26
 	}
 
-	if output <= 0 {
-		panic("ohnoes")
-	}
-	if output > 26 {
-		panic("ohnoes2")
-	}
 	return output
 }
 
