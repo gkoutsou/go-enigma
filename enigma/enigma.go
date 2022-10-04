@@ -2,6 +2,8 @@ package enigma
 
 import (
 	"fmt"
+
+	"github.com/pkg/errors"
 )
 
 type Machine struct {
@@ -9,6 +11,7 @@ type Machine struct {
 	RotorB    *Rotor
 	RotorC    *Rotor
 	Reflector Reflector
+	Plugboard Plugboard
 }
 
 func (e *Machine) rotate() {
@@ -24,12 +27,16 @@ func (e *Machine) rotate() {
 	// fmt.Printf("rotor position: %c%c%c\n", int2rune(e.RotorC.currentPos), int2rune(e.RotorB.currentPos), int2rune(e.RotorA.currentPos))
 }
 
-func (e *Machine) Init(c, b, a int8) {
+func (e *Machine) Init(c, b, a int8, plugboard string) {
 	e.RotorA.init(a)
 	e.RotorB.init(b)
 	e.RotorC.init(c)
 
 	e.Reflector.init()
+	err := e.Plugboard.init(plugboard) // todo make plugboard optional
+	if err != nil {
+		errors.Wrap(err, "failed initialising plugboard")
+	}
 }
 
 func (e *Machine) Press(inputChar rune) rune {
@@ -37,17 +44,28 @@ func (e *Machine) Press(inputChar rune) rune {
 
 	e.rotate()
 
-	outputA := e.RotorA.Pass(input)
+	outputP := e.Plugboard.Pass(input)
+	outputA := e.RotorA.Pass(outputP)
 	outputB := e.RotorB.Pass(outputA)
 	outputC := e.RotorC.Pass(outputB)
 	outputR := e.Reflector.Pass(outputC)
 	outputC2 := e.RotorC.PassBack(outputR)
 	outputB2 := e.RotorB.PassBack(outputC2)
 	outputA2 := e.RotorA.PassBack(outputB2)
+	outputP2 := e.Plugboard.Pass(outputA2)
 
-	fmt.Printf("rotor encryption: %c->%c->%c->%c->%c->%c->%c\n", int2rune(outputA), int2rune(outputB), int2rune(outputC), int2rune(outputR), int2rune(outputC2), int2rune(outputB2), int2rune(outputA2))
+	fmt.Printf("rotor encryption: %c->%c->%c->%c->%c->%c->%c->%c->%c\n",
+		int2rune(outputP),
+		int2rune(outputA),
+		int2rune(outputB),
+		int2rune(outputC),
+		int2rune(outputR),
+		int2rune(outputC2),
+		int2rune(outputB2),
+		int2rune(outputA2),
+		int2rune(outputP2))
 
-	return int2rune(outputA2)
+	return int2rune(outputP2)
 }
 
 func (e *Machine) Type(text string) string {

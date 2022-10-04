@@ -91,9 +91,10 @@ func TestPressFromAAZ(t *testing.T) {
 				RotorB:    &RotorII,
 				RotorC:    &RotorI,
 				Reflector: ReflectorB,
+				Plugboard: Plugboard{},
 			}
 
-			enigma.Init(1, 1, 26)
+			enigma.Init(1, 1, 26, "")
 
 			require.Equal(t, test.output, enigma.Press(test.input))
 		})
@@ -116,9 +117,10 @@ func TestPressFromAAA(t *testing.T) {
 				RotorB:    &RotorII,
 				RotorC:    &RotorI,
 				Reflector: ReflectorB,
+				Plugboard: Plugboard{},
 			}
 
-			enigma.Init(1, 1, 1)
+			enigma.Init(1, 1, 1, "")
 
 			require.Equal(t, string(test.output), string(enigma.Press(test.input)))
 		})
@@ -142,9 +144,35 @@ func TestTypeFromAAA(t *testing.T) {
 				RotorB:    &RotorII,
 				RotorC:    &RotorI,
 				Reflector: ReflectorB,
+				Plugboard: Plugboard{},
 			}
 
-			enigma.Init(1, 1, 1)
+			enigma.Init(1, 1, 1, "")
+
+			require.Equal(t, test.output, enigma.Type(test.input))
+		})
+	}
+}
+
+func TestTypeWithPlugboard(t *testing.T) {
+	cases := []struct {
+		input  string
+		output string
+	}{
+		{input: "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG", output: "VAUFLPVWMQIVFWNPCGPGVPIMKUWZREEDTTQ"},
+	}
+
+	for _, test := range cases {
+		t.Run(fmt.Sprintf("%s->%s", test.input, test.output), func(t *testing.T) {
+			enigma := Machine{
+				RotorA:    &RotorIII,
+				RotorB:    &RotorII,
+				RotorC:    &RotorI,
+				Reflector: ReflectorB,
+				Plugboard: Plugboard{},
+			}
+
+			enigma.Init(1, 1, 1, "QA ED FG BO LP CS RT UJ HN ZW")
 
 			require.Equal(t, test.output, enigma.Type(test.input))
 		})
