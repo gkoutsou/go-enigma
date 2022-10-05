@@ -87,9 +87,9 @@ func (e *Machine) Press(inputChar rune) rune {
 }
 
 func (e *Machine) Type(text string) string {
-	var chars []rune
-	for _, c := range text {
-		chars = append(chars, e.Press(c))
+	chars := make([]rune, len(text))
+	for i, c := range text {
+		chars[i] = e.Press(c)
 	}
 
 	return string(chars)

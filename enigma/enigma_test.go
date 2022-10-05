@@ -2,6 +2,7 @@ package enigma
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -166,31 +167,62 @@ func TestTypeFromAAA(t *testing.T) {
 }
 
 func TestTypeWithPlugboard(t *testing.T) {
-	cases := []struct {
-		input  string
-		output string
-	}{
-		{input: "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG", output: "VAUFLPVWMQIVFWNPCGPGVPIMKUWZREEDTTQ"},
+	input := "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG"
+	expected := "VAUFLPVWMQIVFWNPCGPGVPIMKUWZREEDTTQ"
+
+	settings := Settings{
+		RingSetting:          NewRotorSetting(1, 1, 1),
+		InitialPosition:      NewRotorSetting(1, 1, 1),
+		PlugboardConnections: "QA ED FG BO LP CS RT UJ HN ZW",
+	}
+	enigma := Machine{
+		RotorA:    &RotorIII,
+		RotorB:    &RotorII,
+		RotorC:    &RotorI,
+		Reflector: ReflectorB,
 	}
 
-	for _, test := range cases {
-		t.Run(fmt.Sprintf("%s->%s", test.input, test.output), func(t *testing.T) {
+	enigma.Init(settings)
 
-			settings := Settings{
-				RingSetting:          NewRotorSetting(1, 1, 1),
-				InitialPosition:      NewRotorSetting(1, 1, 1),
-				PlugboardConnections: "QA ED FG BO LP CS RT UJ HN ZW",
-			}
-			enigma := Machine{
-				RotorA:    &RotorIII,
-				RotorB:    &RotorII,
-				RotorC:    &RotorI,
-				Reflector: ReflectorB,
-			}
+	require.Equal(t, expected, enigma.Type(input))
+}
 
-			enigma.Init(settings)
+func TestLongInput(t *testing.T) {
+	input := RandomString(1024)
 
-			require.Equal(t, test.output, enigma.Type(test.input))
-		})
+	settings := Settings{
+		RingSetting:          NewRotorSetting(2, 3, 4),
+		InitialPosition:      NewRotorSetting(5, 6, 7),
+		PlugboardConnections: "QA ED FG BO LP CS RT UJ HN ZW",
 	}
+
+	enigma := Machine{
+		RotorA:    &RotorIII,
+		RotorB:    &RotorII,
+		RotorC:    &RotorI,
+		Reflector: ReflectorB,
+	}
+
+	enigma.Init(settings)
+	output := enigma.Type(input)
+	require.Len(t, output, 1024)
+	require.NotEqual(t, input, output)
+
+	// Pass output again to a initialised machine
+	// The final output should be the same as the original message
+
+	enigma.Init(settings)
+	finalOutput := enigma.Type(output)
+	require.Len(t, finalOutput, 1024)
+	require.Equal(t, input, finalOutput)
+}
+
+func RandomString(n int) string {
+	var letters = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+	s := make([]rune, n)
+	for i := range s {
+		s[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(s)
 }
