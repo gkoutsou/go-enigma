@@ -86,15 +86,18 @@ func TestPressFromAAZ(t *testing.T) {
 
 	for _, test := range cases {
 		t.Run(fmt.Sprintf("Char=%c", test.input), func(t *testing.T) {
+			settings := Settings{
+				RingSetting:     NewRotorSetting(1, 1, 1),
+				InitialPosition: NewRotorSetting(26, 1, 1),
+			}
 			enigma := Machine{
 				RotorA:    &RotorIII,
 				RotorB:    &RotorII,
 				RotorC:    &RotorI,
 				Reflector: ReflectorB,
-				Plugboard: Plugboard{},
 			}
 
-			enigma.Init(1, 1, 26, "")
+			enigma.Init(settings)
 
 			require.Equal(t, test.output, enigma.Press(test.input))
 		})
@@ -112,15 +115,19 @@ func TestPressFromAAA(t *testing.T) {
 
 	for _, test := range cases {
 		t.Run(fmt.Sprintf("%c->%c", test.input, test.output), func(t *testing.T) {
+			settings := Settings{
+				RingSetting:     NewRotorSetting(1, 1, 1),
+				InitialPosition: NewRotorSetting(1, 1, 1),
+			}
+
 			enigma := Machine{
 				RotorA:    &RotorIII,
 				RotorB:    &RotorII,
 				RotorC:    &RotorI,
 				Reflector: ReflectorB,
-				Plugboard: Plugboard{},
 			}
 
-			enigma.Init(1, 1, 1, "")
+			enigma.Init(settings)
 
 			require.Equal(t, string(test.output), string(enigma.Press(test.input)))
 		})
@@ -139,15 +146,19 @@ func TestTypeFromAAA(t *testing.T) {
 
 	for _, test := range cases {
 		t.Run(fmt.Sprintf("%s->%s", test.input, test.output), func(t *testing.T) {
+			settings := Settings{
+				RingSetting:     NewRotorSetting(1, 1, 1),
+				InitialPosition: NewRotorSetting(1, 1, 1),
+			}
+
 			enigma := Machine{
 				RotorA:    &RotorIII,
 				RotorB:    &RotorII,
 				RotorC:    &RotorI,
 				Reflector: ReflectorB,
-				Plugboard: Plugboard{},
 			}
 
-			enigma.Init(1, 1, 1, "")
+			enigma.Init(settings)
 
 			require.Equal(t, test.output, enigma.Type(test.input))
 		})
@@ -164,15 +175,20 @@ func TestTypeWithPlugboard(t *testing.T) {
 
 	for _, test := range cases {
 		t.Run(fmt.Sprintf("%s->%s", test.input, test.output), func(t *testing.T) {
+
+			settings := Settings{
+				RingSetting:          NewRotorSetting(1, 1, 1),
+				InitialPosition:      NewRotorSetting(1, 1, 1),
+				PlugboardConnections: "QA ED FG BO LP CS RT UJ HN ZW",
+			}
 			enigma := Machine{
 				RotorA:    &RotorIII,
 				RotorB:    &RotorII,
 				RotorC:    &RotorI,
 				Reflector: ReflectorB,
-				Plugboard: Plugboard{},
 			}
 
-			enigma.Init(1, 1, 1, "QA ED FG BO LP CS RT UJ HN ZW")
+			enigma.Init(settings)
 
 			require.Equal(t, test.output, enigma.Type(test.input))
 		})

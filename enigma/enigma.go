@@ -6,12 +6,30 @@ import (
 	"github.com/pkg/errors"
 )
 
+type RotorSetting struct {
+	a, b, c int8
+}
+
+func NewRotorSetting(a, b, c int8) RotorSetting {
+	return RotorSetting{
+		a: a,
+		b: b,
+		c: c,
+	}
+}
+
+type Settings struct {
+	RingSetting          RotorSetting
+	InitialPosition      RotorSetting
+	PlugboardConnections string
+}
+
 type Machine struct {
 	RotorA    *Rotor
 	RotorB    *Rotor
 	RotorC    *Rotor
 	Reflector Reflector
-	Plugboard Plugboard
+	plugboard Plugboard
 }
 
 func (e *Machine) rotate() {
@@ -27,13 +45,13 @@ func (e *Machine) rotate() {
 	// fmt.Printf("rotor position: %c%c%c\n", int2rune(e.RotorC.currentPos), int2rune(e.RotorB.currentPos), int2rune(e.RotorA.currentPos))
 }
 
-func (e *Machine) Init(c, b, a int8, plugboard string) {
-	e.RotorA.init(a)
-	e.RotorB.init(b)
-	e.RotorC.init(c)
+func (e *Machine) Init(settings Settings) {
+	e.RotorA.init(settings.InitialPosition.a)
+	e.RotorB.init(settings.InitialPosition.b)
+	e.RotorC.init(settings.InitialPosition.c)
 
 	e.Reflector.init()
-	err := e.Plugboard.init(plugboard) // todo make plugboard optional
+	err := e.plugboard.init(settings.PlugboardConnections) // todo make plugboard optional
 	if err != nil {
 		errors.Wrap(err, "failed initialising plugboard")
 	}
@@ -44,7 +62,7 @@ func (e *Machine) Press(inputChar rune) rune {
 
 	e.rotate()
 
-	outputP := e.Plugboard.Pass(input)
+	outputP := e.plugboard.Pass(input)
 	outputA := e.RotorA.Pass(outputP)
 	outputB := e.RotorB.Pass(outputA)
 	outputC := e.RotorC.Pass(outputB)
@@ -52,7 +70,7 @@ func (e *Machine) Press(inputChar rune) rune {
 	outputC2 := e.RotorC.PassBack(outputR)
 	outputB2 := e.RotorB.PassBack(outputC2)
 	outputA2 := e.RotorA.PassBack(outputB2)
-	outputP2 := e.Plugboard.Pass(outputA2)
+	outputP2 := e.plugboard.Pass(outputA2)
 
 	fmt.Printf("rotor encryption: %c->%c->%c->%c->%c->%c->%c->%c->%c\n",
 		int2rune(outputP),

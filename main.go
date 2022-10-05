@@ -8,6 +8,12 @@ import (
 
 func main() {
 
+	settings := enigma.Settings{
+		RingSetting:          enigma.NewRotorSetting(1, 1, 1),
+		InitialPosition:      enigma.NewRotorSetting(1, 1, 1),
+		PlugboardConnections: "QA ED FG BO LP CS RT UJ HN ZW",
+	}
+
 	enigma := enigma.Machine{
 		RotorA:    &enigma.RotorIII,
 		RotorB:    &enigma.RotorII,
@@ -15,7 +21,7 @@ func main() {
 		Reflector: enigma.ReflectorB,
 	}
 
-	enigma.Init(1, 1, 1, "QA ED FG BO LP CS RT UJ HN ZW")
+	enigma.Init(settings)
 
 	fmt.Printf("%s", enigma.Type("ABCDE"))
 }
