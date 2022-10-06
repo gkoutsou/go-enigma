@@ -10,11 +10,11 @@ var DefaultRotorSetting = RotorSetting{
 	c: 1,
 }
 
-func NewRotorSetting(c, b, a int8) RotorSetting {
+func NewRotorSetting(c, b, a rune) RotorSetting {
 	return RotorSetting{
-		a: a,
-		b: b,
-		c: c,
+		a: rune2Int(a),
+		b: rune2Int(b),
+		c: rune2Int(c),
 	}
 }
 

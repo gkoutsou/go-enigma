@@ -22,8 +22,8 @@ func TestEncode_WithDefaultSettings(t *testing.T) {
 	for _, test := range cases {
 		t.Run(fmt.Sprintf("%s->%s", test.input, test.output), func(t *testing.T) {
 			settings := enigma.Settings{
-				RingSetting:     enigma.NewRotorSetting(1, 1, 1),
-				InitialPosition: enigma.NewRotorSetting(1, 1, 1),
+				RingSetting:     enigma.DefaultRotorSetting,
+				InitialPosition: enigma.DefaultRotorSetting,
 			}
 
 			enigma := enigma.Machine{
@@ -45,8 +45,8 @@ func TestEncode_WithPlugboard(t *testing.T) {
 	expected := "VAUFLPVWMQIVFWNPCGPGVPIMKUWZREEDTTQ"
 
 	settings := enigma.Settings{
-		RingSetting:          enigma.NewRotorSetting(1, 1, 1),
-		InitialPosition:      enigma.NewRotorSetting(1, 1, 1),
+		RingSetting:          enigma.DefaultRotorSetting,
+		InitialPosition:      enigma.DefaultRotorSetting,
 		PlugboardConnections: "QA ED FG BO LP CS RT UJ HN ZW",
 	}
 	enigma := enigma.Machine{
@@ -66,8 +66,8 @@ func TestEncode_WithRingSetting(t *testing.T) {
 	expected := "BIMFPHIL"
 
 	settings := enigma.Settings{
-		RingSetting:     enigma.NewRotorSetting(10, 12, 14), //JLN
-		InitialPosition: enigma.NewRotorSetting(17, 15, 7),  //QOG
+		RingSetting:     enigma.NewRotorSetting('J', 'L', 'N'), //JLN
+		InitialPosition: enigma.NewRotorSetting('Q', 'O', 'G'), //QOG
 	}
 	enigma := enigma.Machine{
 		RotorA:    &enigma.RotorIII,
@@ -85,8 +85,8 @@ func TestEncode_LongInput(t *testing.T) {
 	input := randomString(1024)
 
 	settings := enigma.Settings{
-		RingSetting:          enigma.NewRotorSetting(2, 3, 4),
-		InitialPosition:      enigma.NewRotorSetting(5, 6, 7),
+		RingSetting:          enigma.NewRotorSetting('B', 'C', 'D'),
+		InitialPosition:      enigma.NewRotorSetting('E', 'F', 'G'),
 		PlugboardConnections: "QA ED FG BO LP CS RT UJ HN ZW",
 	}
 

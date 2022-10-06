@@ -87,8 +87,8 @@ func TestPressFromAAZ(t *testing.T) {
 	for _, test := range cases {
 		t.Run(fmt.Sprintf("Char=%c", test.input), func(t *testing.T) {
 			settings := Settings{
-				RingSetting:     NewRotorSetting(1, 1, 1),
-				InitialPosition: NewRotorSetting(1, 1, 26),
+				RingSetting:     DefaultRotorSetting,
+				InitialPosition: NewRotorSetting('A', 'A', 'Z'),
 			}
 			enigma := Machine{
 				RotorA:    &RotorIII,
@@ -109,8 +109,8 @@ func TestPress_FromAAA(t *testing.T) {
 	output := "B"
 
 	settings := Settings{
-		RingSetting:     NewRotorSetting(1, 1, 1),
-		InitialPosition: NewRotorSetting(1, 1, 1),
+		RingSetting:     DefaultRotorSetting,
+		InitialPosition: DefaultRotorSetting,
 	}
 
 	enigma := Machine{
@@ -130,8 +130,8 @@ func TestPress_WithRingSetting_FromAAA(t *testing.T) {
 	output := "O"
 
 	settings := Settings{
-		RingSetting:     NewRotorSetting(1, 1, 2),
-		InitialPosition: NewRotorSetting(1, 1, 26),
+		RingSetting:     NewRotorSetting('A', 'A', 'B'),
+		InitialPosition: NewRotorSetting('A', 'A', 'Z'),
 	}
 
 	enigma := Machine{

@@ -9,8 +9,8 @@ import (
 func main() {
 
 	settings := enigma.Settings{
-		RingSetting:          enigma.NewRotorSetting(1, 1, 1),
-		InitialPosition:      enigma.NewRotorSetting(1, 1, 1),
+		RingSetting:          enigma.DefaultRotorSetting,
+		InitialPosition:      enigma.DefaultRotorSetting,
 		PlugboardConnections: "QA ED FG BO LP CS RT UJ HN ZW",
 	}
 
