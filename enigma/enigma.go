@@ -25,16 +25,17 @@ func (e *Machine) rotate() {
 	// fmt.Printf("rotor position: %c%c%c\n", int2rune(e.RotorC.currentPos), int2rune(e.RotorB.currentPos), int2rune(e.RotorA.currentPos))
 }
 
-func (e *Machine) Init(settings Settings) {
+func (e *Machine) Init(settings Settings) error {
 	e.RotorA.init(settings.InitialPosition.a, settings.RingSetting.a)
 	e.RotorB.init(settings.InitialPosition.b, settings.RingSetting.b)
 	e.RotorC.init(settings.InitialPosition.c, settings.RingSetting.c)
 
 	e.Reflector.init()
-	err := e.plugboard.init(settings.PlugboardConnections) // todo make plugboard optional
+	err := e.plugboard.init(settings.PlugboardConnections)
 	if err != nil {
-		errors.Wrap(err, "failed initialising plugboard")
+		return errors.Wrap(err, "failed initialising plugboard")
 	}
+	return nil
 }
 
 func (e *Machine) Press(inputChar rune) rune {

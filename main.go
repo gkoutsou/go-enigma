@@ -21,7 +21,10 @@ func main() {
 		Reflector: enigma.ReflectorB,
 	}
 
-	enigma.Init(settings)
+	err := enigma.Init(settings)
+	if err != nil {
+		panic(err)
+	}
 
 	fmt.Printf("%s", enigma.Type("ABCDE"))
 }
