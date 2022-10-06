@@ -1,6 +1,7 @@
 package enigma
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -14,7 +15,7 @@ func TestRotateOnce(t *testing.T) {
 	require.Equal(t, int8(2), r.currentPos)
 }
 
-func TestRotateWithNotch(t *testing.T) {
+func TestRotate_WithNotch(t *testing.T) {
 	r := Rotor{currentPos: 1, notchPos: 2}
 
 	rotateNext := r.rotate()
@@ -22,7 +23,7 @@ func TestRotateWithNotch(t *testing.T) {
 	require.Equal(t, int8(2), r.currentPos)
 }
 
-func TestRotateTwice(t *testing.T) {
+func TestRotate_Twice(t *testing.T) {
 	r := Rotor{currentPos: 1, notchPos: 3}
 
 	rotateNext := r.rotate()
@@ -34,7 +35,7 @@ func TestRotateTwice(t *testing.T) {
 	require.Equal(t, int8(3), r.currentPos)
 }
 
-func TestRotate26(t *testing.T) {
+func TestRotate_26Times(t *testing.T) {
 	r := Rotor{currentPos: 1, notchPos: 1}
 
 	for i := 2; i < 27; i++ {
@@ -47,12 +48,37 @@ func TestRotate26(t *testing.T) {
 	require.True(t, rotateNext)
 }
 
-func TestPassA_WhenA(t *testing.T) {
+func TestPass_AWhenA(t *testing.T) {
 	r := RotorIII
-	r.init(2)
+	r.init(2, 1)
 
 	input := rune2Int('A')
 	output := r.Pass(input)
 	require.Equal(t, "C", string(int2rune(output)))
+}
 
+func TestPass_WithRingSetting(t *testing.T) {
+	cases := []struct {
+		initPos     int8
+		ringSetting int8
+		input       rune
+		output      string
+	}{
+		{input: 'A', output: "P", initPos: int8(1), ringSetting: int8(2)},
+		{input: 'A', output: "B", initPos: int8(2), ringSetting: int8(2)},
+		{input: 'T', output: "T", initPos: int8(8), ringSetting: int8(14)},
+	}
+
+	for _, test := range cases {
+		t.Run(fmt.Sprintf("(%d,%d) - %c", test.initPos, test.ringSetting, test.input), func(t *testing.T) {
+
+			r := RotorIII
+			r.init(test.initPos, test.ringSetting)
+
+			input := rune2Int(test.input)
+			output := r.Pass(input)
+			require.Equal(t, test.output, string(int2rune(output)))
+
+		})
+	}
 }

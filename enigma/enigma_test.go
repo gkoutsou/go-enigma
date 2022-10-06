@@ -2,7 +2,6 @@ package enigma
 
 import (
 	"fmt"
-	"math/rand"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -89,7 +88,7 @@ func TestPressFromAAZ(t *testing.T) {
 		t.Run(fmt.Sprintf("Char=%c", test.input), func(t *testing.T) {
 			settings := Settings{
 				RingSetting:     NewRotorSetting(1, 1, 1),
-				InitialPosition: NewRotorSetting(26, 1, 1),
+				InitialPosition: NewRotorSetting(1, 1, 26),
 			}
 			enigma := Machine{
 				RotorA:    &RotorIII,
@@ -105,95 +104,13 @@ func TestPressFromAAZ(t *testing.T) {
 	}
 }
 
-func TestPressFromAAA(t *testing.T) {
-	cases := []struct {
-		input  rune
-		output rune
-	}{
-		{input: 'A', output: 'B'},
-		{input: 'A', output: 'B'},
-	}
-
-	for _, test := range cases {
-		t.Run(fmt.Sprintf("%c->%c", test.input, test.output), func(t *testing.T) {
-			settings := Settings{
-				RingSetting:     NewRotorSetting(1, 1, 1),
-				InitialPosition: NewRotorSetting(1, 1, 1),
-			}
-
-			enigma := Machine{
-				RotorA:    &RotorIII,
-				RotorB:    &RotorII,
-				RotorC:    &RotorI,
-				Reflector: ReflectorB,
-			}
-
-			enigma.Init(settings)
-
-			require.Equal(t, string(test.output), string(enigma.Press(test.input)))
-		})
-	}
-}
-
-func TestTypeFromAAA(t *testing.T) {
-	cases := []struct {
-		input  string
-		output string
-	}{
-		{input: "ABCDE", output: "BJELR"},
-		{input: "THEQUICKBROWNFOX", output: "OPCILLAZFXLQTDNL"},
-		{input: "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG", output: "OPCILLAZFXLQTDNLGGLEKDIZOKQKGXIEZKD"},
-	}
-
-	for _, test := range cases {
-		t.Run(fmt.Sprintf("%s->%s", test.input, test.output), func(t *testing.T) {
-			settings := Settings{
-				RingSetting:     NewRotorSetting(1, 1, 1),
-				InitialPosition: NewRotorSetting(1, 1, 1),
-			}
-
-			enigma := Machine{
-				RotorA:    &RotorIII,
-				RotorB:    &RotorII,
-				RotorC:    &RotorI,
-				Reflector: ReflectorB,
-			}
-
-			enigma.Init(settings)
-
-			require.Equal(t, test.output, enigma.Type(test.input))
-		})
-	}
-}
-
-func TestTypeWithPlugboard(t *testing.T) {
-	input := "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG"
-	expected := "VAUFLPVWMQIVFWNPCGPGVPIMKUWZREEDTTQ"
+func TestPress_FromAAA(t *testing.T) {
+	input := 'A'
+	output := "B"
 
 	settings := Settings{
-		RingSetting:          NewRotorSetting(1, 1, 1),
-		InitialPosition:      NewRotorSetting(1, 1, 1),
-		PlugboardConnections: "QA ED FG BO LP CS RT UJ HN ZW",
-	}
-	enigma := Machine{
-		RotorA:    &RotorIII,
-		RotorB:    &RotorII,
-		RotorC:    &RotorI,
-		Reflector: ReflectorB,
-	}
-
-	enigma.Init(settings)
-
-	require.Equal(t, expected, enigma.Type(input))
-}
-
-func TestLongInput(t *testing.T) {
-	input := RandomString(1024)
-
-	settings := Settings{
-		RingSetting:          NewRotorSetting(2, 3, 4),
-		InitialPosition:      NewRotorSetting(5, 6, 7),
-		PlugboardConnections: "QA ED FG BO LP CS RT UJ HN ZW",
+		RingSetting:     NewRotorSetting(1, 1, 1),
+		InitialPosition: NewRotorSetting(1, 1, 1),
 	}
 
 	enigma := Machine{
@@ -204,25 +121,27 @@ func TestLongInput(t *testing.T) {
 	}
 
 	enigma.Init(settings)
-	output := enigma.Type(input)
-	require.Len(t, output, 1024)
-	require.NotEqual(t, input, output)
 
-	// Pass output again to a initialised machine
-	// The final output should be the same as the original message
-
-	enigma.Init(settings)
-	finalOutput := enigma.Type(output)
-	require.Len(t, finalOutput, 1024)
-	require.Equal(t, input, finalOutput)
+	require.Equal(t, output, string(enigma.Press(input)))
 }
 
-func RandomString(n int) string {
-	var letters = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+func TestPress_WithRingSetting_FromAAA(t *testing.T) {
+	input := 'A'
+	output := "O"
 
-	s := make([]rune, n)
-	for i := range s {
-		s[i] = letters[rand.Intn(len(letters))]
+	settings := Settings{
+		RingSetting:     NewRotorSetting(1, 1, 2),
+		InitialPosition: NewRotorSetting(1, 1, 26),
 	}
-	return string(s)
+
+	enigma := Machine{
+		RotorA:    &RotorIII,
+		RotorB:    &RotorII,
+		RotorC:    &RotorI,
+		Reflector: ReflectorB,
+	}
+
+	enigma.Init(settings)
+
+	require.Equal(t, output, string(enigma.Press(input)))
 }

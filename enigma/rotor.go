@@ -5,8 +5,9 @@ type Rotor struct {
 	mapping     map[int8]int8
 	mappingBack map[int8]int8
 
-	currentPos int8
-	notchPos   int8
+	currentPos  int8
+	notchPos    int8
+	ringSetting int8
 }
 
 func (r *Rotor) rotate() bool {
@@ -22,7 +23,7 @@ func (r *Rotor) rotate() bool {
 	return false
 }
 
-func (r *Rotor) init(pos int8) {
+func (r *Rotor) init(initialPosition, ringSetting int8) {
 	r.mapping = map[int8]int8{}
 	r.mappingBack = map[int8]int8{}
 
@@ -32,17 +33,18 @@ func (r *Rotor) init(pos int8) {
 		r.mappingBack[rune2Int(m[i])] = i + 1
 	}
 
-	r.currentPos = pos
+	r.currentPos = initialPosition
+	r.ringSetting = ringSetting
 }
 
 func (r *Rotor) Pass(character int8) int8 {
-	position := character + (r.currentPos - 1)
-	if position > 26 {
+	position := character + (r.currentPos - 1) - (r.ringSetting - 1) + 26
+	for position > 26 {
 		position -= 26
 	}
 
-	output := r.mapping[position] - (r.currentPos - 1)
-	if output <= 0 {
+	output := r.mapping[position] - (r.currentPos - 1) + (r.ringSetting - 1) - 26
+	for output <= 0 {
 		output += 26
 	}
 
@@ -50,13 +52,13 @@ func (r *Rotor) Pass(character int8) int8 {
 }
 
 func (r *Rotor) PassBack(character int8) int8 {
-	position := character + (r.currentPos - 1)
-	if position > 26 {
+	position := character + (r.currentPos - 1) - (r.ringSetting - 1) + 26
+	for position > 26 {
 		position -= 26
 	}
 
-	output := r.mappingBack[position] - (r.currentPos - 1)
-	if output <= 0 {
+	output := r.mappingBack[position] - (r.currentPos - 1) + (r.ringSetting - 1) - 26
+	for output <= 0 {
 		output += 26
 	}
 

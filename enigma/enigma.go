@@ -1,28 +1,8 @@
 package enigma
 
 import (
-	"fmt"
-
 	"github.com/pkg/errors"
 )
-
-type RotorSetting struct {
-	a, b, c int8
-}
-
-func NewRotorSetting(a, b, c int8) RotorSetting {
-	return RotorSetting{
-		a: a,
-		b: b,
-		c: c,
-	}
-}
-
-type Settings struct {
-	RingSetting          RotorSetting
-	InitialPosition      RotorSetting
-	PlugboardConnections string
-}
 
 type Machine struct {
 	RotorA    *Rotor
@@ -34,10 +14,10 @@ type Machine struct {
 
 func (e *Machine) rotate() {
 	if e.RotorA.rotate() {
-		fmt.Println("rotor B should rotate!")
+		// fmt.Println("rotor B should rotate!")
 
 		if e.RotorB.rotate() {
-			fmt.Println("rotor C should rotate!")
+			// fmt.Println("rotor C should rotate!")
 			e.RotorC.rotate()
 		}
 	}
@@ -46,9 +26,9 @@ func (e *Machine) rotate() {
 }
 
 func (e *Machine) Init(settings Settings) {
-	e.RotorA.init(settings.InitialPosition.a)
-	e.RotorB.init(settings.InitialPosition.b)
-	e.RotorC.init(settings.InitialPosition.c)
+	e.RotorA.init(settings.InitialPosition.a, settings.RingSetting.a)
+	e.RotorB.init(settings.InitialPosition.b, settings.RingSetting.b)
+	e.RotorC.init(settings.InitialPosition.c, settings.RingSetting.c)
 
 	e.Reflector.init()
 	err := e.plugboard.init(settings.PlugboardConnections) // todo make plugboard optional
@@ -72,16 +52,16 @@ func (e *Machine) Press(inputChar rune) rune {
 	outputA2 := e.RotorA.PassBack(outputB2)
 	outputP2 := e.plugboard.Pass(outputA2)
 
-	fmt.Printf("rotor encryption: %c->%c->%c->%c->%c->%c->%c->%c->%c\n",
-		int2rune(outputP),
-		int2rune(outputA),
-		int2rune(outputB),
-		int2rune(outputC),
-		int2rune(outputR),
-		int2rune(outputC2),
-		int2rune(outputB2),
-		int2rune(outputA2),
-		int2rune(outputP2))
+	// fmt.Printf("rotor encryption: %c->%c->%c->%c->%c->%c->%c->%c->%c\n",
+	// 	int2rune(outputP),
+	// 	int2rune(outputA),
+	// 	int2rune(outputB),
+	// 	int2rune(outputC),
+	// 	int2rune(outputR),
+	// 	int2rune(outputC2),
+	// 	int2rune(outputB2),
+	// 	int2rune(outputA2),
+	// 	int2rune(outputP2))
 
 	return int2rune(outputP2)
 }
