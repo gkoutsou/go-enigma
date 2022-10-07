@@ -83,6 +83,14 @@ var RotorIII = Rotor{
 	notchPos: 23,
 }
 
-// TODO:
 // IV: ESOVPZJAYQUIRHXLNFTGKDCMWB notch: K
+var RotorIV = Rotor{
+	mappingS: "ESOVPZJAYQUIRHXLNFTGKDCMWB",
+	notchPos: 11,
+}
+
 // V: VZBRGITYUPSDNHLXAWMJQOFECK notch: A
+var RotorV = Rotor{
+	mappingS: "VZBRGITYUPSDNHLXAWMJQOFECK",
+	notchPos: 1,
+}
