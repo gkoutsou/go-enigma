@@ -40,7 +40,7 @@ func TestRotate(t *testing.T) {
 				},
 			}
 
-			for i := 0; i < int(test.rotations); i++ {
+			for i := 0; i < test.rotations; i++ {
 				e.rotate()
 			}
 			require.Equal(t, test.c, e.RotorC.currentPos)
@@ -97,7 +97,8 @@ func TestPressFromAAZ(t *testing.T) {
 				Reflector: ReflectorB,
 			}
 
-			enigma.Init(settings)
+			err := enigma.Init(settings)
+			require.NoError(t, err)
 
 			require.Equal(t, test.output, enigma.Press(test.input))
 		})
@@ -120,7 +121,8 @@ func TestPress_FromAAA(t *testing.T) {
 		Reflector: ReflectorB,
 	}
 
-	enigma.Init(settings)
+	err := enigma.Init(settings)
+	require.NoError(t, err)
 
 	require.Equal(t, output, string(enigma.Press(input)))
 }
@@ -141,7 +143,8 @@ func TestPress_WithRingSetting_FromAAA(t *testing.T) {
 		Reflector: ReflectorB,
 	}
 
-	enigma.Init(settings)
+	err := enigma.Init(settings)
+	require.NoError(t, err)
 
 	require.Equal(t, output, string(enigma.Press(input)))
 }

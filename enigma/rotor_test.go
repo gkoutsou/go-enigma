@@ -43,6 +43,7 @@ func TestRotate_26Times(t *testing.T) {
 		require.Equal(t, int8(i), r.currentPos)
 		require.False(t, rotateNext)
 	}
+
 	rotateNext := r.rotate()
 	require.Equal(t, int8(1), r.currentPos)
 	require.True(t, rotateNext)
@@ -59,10 +60,10 @@ func TestPass_AWhenA(t *testing.T) {
 
 func TestPass_WithRingSetting(t *testing.T) {
 	cases := []struct {
+		output      string
+		input       rune
 		initPos     int8
 		ringSetting int8
-		input       rune
-		output      string
 	}{
 		{input: 'A', output: "P", initPos: int8(1), ringSetting: int8(2)},
 		{input: 'A', output: "B", initPos: int8(2), ringSetting: int8(2)},
@@ -71,14 +72,12 @@ func TestPass_WithRingSetting(t *testing.T) {
 
 	for _, test := range cases {
 		t.Run(fmt.Sprintf("(%d,%d) - %c", test.initPos, test.ringSetting, test.input), func(t *testing.T) {
-
 			r := RotorIII
 			r.init(test.initPos, test.ringSetting)
 
 			input := rune2Int(test.input)
 			output := r.Pass(input)
 			require.Equal(t, test.output, string(int2rune(output)))
-
 		})
 	}
 }

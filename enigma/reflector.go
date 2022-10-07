@@ -1,8 +1,8 @@
 package enigma
 
 type Reflector struct {
-	mappingS string
 	mapping  map[int8]int8
+	mappingS string
 }
 
 func (r *Reflector) init() {
@@ -18,17 +18,17 @@ func (r *Reflector) Pass(character int8) int8 {
 	return r.mapping[character]
 }
 
-// A: EJMZALYXVBWFCRQUONTSPIKHGD
+// ReflectorA contains the following mapping EJMZALYXVBWFCRQUONTSPIKHGD
 var ReflectorA = Reflector{
 	mappingS: "EJMZALYXVBWFCRQUONTSPIKHGD",
 }
 
-// B: YRUHQSLDPXNGOKMIEBFZCWVJAT
+// ReflectorB contains the following mapping YRUHQSLDPXNGOKMIEBFZCWVJAT
 var ReflectorB = Reflector{
 	mappingS: "YRUHQSLDPXNGOKMIEBFZCWVJAT",
 }
 
-// C: FVPJIAOYEDRZXWGCTKUQSBNMHL
+// ReflectorC contains the following mapping FVPJIAOYEDRZXWGCTKUQSBNMHL
 var ReflectorC = Reflector{
 	mappingS: "FVPJIAOYEDRZXWGCTKUQSBNMHL",
 }

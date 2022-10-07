@@ -12,8 +12,12 @@ type Plugboard struct {
 func (r *Plugboard) init(s string) error {
 	r.mapping = map[int8]int8{}
 
-	pairs := strings.Split(s, " ")
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return nil
+	}
 
+	pairs := strings.Split(s, " ")
 	for _, pair := range pairs {
 		if len(pair) != 2 {
 			return errors.New("should have pairs of characters as input")
@@ -24,6 +28,7 @@ func (r *Plugboard) init(s string) error {
 		r.mapping[a] = b
 		r.mapping[b] = a
 	}
+
 	return nil
 }
 
@@ -31,5 +36,6 @@ func (r *Plugboard) Pass(character int8) int8 {
 	if c, ok := r.mapping[character]; ok {
 		return c
 	}
+
 	return character
 }

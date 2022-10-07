@@ -1,9 +1,9 @@
 package enigma
 
 type Rotor struct {
-	mappingS    string
 	mapping     map[int8]int8
 	mappingBack map[int8]int8
+	mappingS    string
 
 	currentPos  int8
 	notchPos    int8
@@ -65,31 +65,31 @@ func (r *Rotor) PassBack(character int8) int8 {
 	return output
 }
 
-// I: EKMFLGDQVZNTOWYHXUSPAIBRCJ notch: R
+// RotorI contains the following mapping EKMFLGDQVZNTOWYHXUSPAIBRCJ. The notch is at position R
 var RotorI = Rotor{
 	mappingS: "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
 	notchPos: 18,
 }
 
-// II: AJDKSIRUXBLHWTMCQGZNPYFVOE notch: F
+// RotorII contains the following mapping AJDKSIRUXBLHWTMCQGZNPYFVOE. The notch is at position F
 var RotorII = Rotor{
 	mappingS: "AJDKSIRUXBLHWTMCQGZNPYFVOE",
 	notchPos: 6,
 }
 
-// III: BDFHJLCPRTXVZNYEIWGAKMUSQO notch: W
+// RotorIII contains the following mapping BDFHJLCPRTXVZNYEIWGAKMUSQO. The notch is at position W
 var RotorIII = Rotor{
 	mappingS: "BDFHJLCPRTXVZNYEIWGAKMUSQO",
 	notchPos: 23,
 }
 
-// IV: ESOVPZJAYQUIRHXLNFTGKDCMWB notch: K
+// RotorIV contains the following mapping ESOVPZJAYQUIRHXLNFTGKDCMWB. The notch is at position K
 var RotorIV = Rotor{
 	mappingS: "ESOVPZJAYQUIRHXLNFTGKDCMWB",
 	notchPos: 11,
 }
 
-// V: VZBRGITYUPSDNHLXAWMJQOFECK notch: A
+// RotorV contains the following mapping VZBRGITYUPSDNHLXAWMJQOFECK. The notch is at position A
 var RotorV = Rotor{
 	mappingS: "VZBRGITYUPSDNHLXAWMJQOFECK",
 	notchPos: 1,

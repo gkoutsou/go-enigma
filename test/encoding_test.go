@@ -26,16 +26,17 @@ func TestEncode_WithDefaultSettings(t *testing.T) {
 				InitialPosition: enigma.DefaultRotorSetting,
 			}
 
-			enigma := enigma.Machine{
+			e := enigma.Machine{
 				RotorA:    &enigma.RotorIII,
 				RotorB:    &enigma.RotorII,
 				RotorC:    &enigma.RotorI,
 				Reflector: enigma.ReflectorB,
 			}
 
-			enigma.Init(settings)
+			err := e.Init(settings)
+			require.NoError(t, err)
 
-			require.Equal(t, test.output, enigma.Type(test.input))
+			require.Equal(t, test.output, e.Type(test.input))
 		})
 	}
 }
@@ -49,16 +50,17 @@ func TestEncode_WithPlugboard(t *testing.T) {
 		InitialPosition:      enigma.DefaultRotorSetting,
 		PlugboardConnections: "QA ED FG BO LP CS RT UJ HN ZW",
 	}
-	enigma := enigma.Machine{
+	e := enigma.Machine{
 		RotorA:    &enigma.RotorIII,
 		RotorB:    &enigma.RotorII,
 		RotorC:    &enigma.RotorI,
 		Reflector: enigma.ReflectorB,
 	}
 
-	enigma.Init(settings)
+	err := e.Init(settings)
+	require.NoError(t, err)
 
-	require.Equal(t, expected, enigma.Type(input))
+	require.Equal(t, expected, e.Type(input))
 }
 
 func TestEncode_WithRingSetting(t *testing.T) {
@@ -66,19 +68,20 @@ func TestEncode_WithRingSetting(t *testing.T) {
 	expected := "BIMFPHIL"
 
 	settings := enigma.Settings{
-		RingSetting:     enigma.NewRotorSetting('J', 'L', 'N'), //JLN
-		InitialPosition: enigma.NewRotorSetting('Q', 'O', 'G'), //QOG
+		RingSetting:     enigma.NewRotorSetting('J', 'L', 'N'),
+		InitialPosition: enigma.NewRotorSetting('Q', 'O', 'G'),
 	}
-	enigma := enigma.Machine{
+	e := enigma.Machine{
 		RotorA:    &enigma.RotorIII,
 		RotorB:    &enigma.RotorII,
 		RotorC:    &enigma.RotorI,
 		Reflector: enigma.ReflectorB,
 	}
 
-	enigma.Init(settings)
+	err := e.Init(settings)
+	require.NoError(t, err)
 
-	require.Equal(t, expected, enigma.Type(input))
+	require.Equal(t, expected, e.Type(input))
 }
 
 func TestEncode_LongInput(t *testing.T) {
@@ -90,33 +93,38 @@ func TestEncode_LongInput(t *testing.T) {
 		PlugboardConnections: "QA ED FG BO LP CS RT UJ HN ZW",
 	}
 
-	enigma := enigma.Machine{
+	e := enigma.Machine{
 		RotorA:    &enigma.RotorIII,
 		RotorB:    &enigma.RotorII,
 		RotorC:    &enigma.RotorI,
 		Reflector: enigma.ReflectorB,
 	}
 
-	enigma.Init(settings)
-	output := enigma.Type(input)
+	err := e.Init(settings)
+	require.NoError(t, err)
+
+	output := e.Type(input)
 	require.Len(t, output, 1024)
 	require.NotEqual(t, input, output)
 
 	// Pass output again to a initialised machine
 	// The final output should be the same as the original message
 
-	enigma.Init(settings)
-	finalOutput := enigma.Type(output)
+	err = e.Init(settings)
+	require.NoError(t, err)
+
+	finalOutput := e.Type(output)
 	require.Len(t, finalOutput, 1024)
 	require.Equal(t, input, finalOutput)
 }
 
 func randomString(n int) string {
-	var letters = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	letters := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 	s := make([]rune, n)
 	for i := range s {
 		s[i] = letters[rand.Intn(len(letters))]
 	}
+
 	return string(s)
 }

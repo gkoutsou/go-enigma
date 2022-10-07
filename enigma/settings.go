@@ -19,7 +19,7 @@ func NewRotorSetting(c, b, a rune) RotorSetting {
 }
 
 type Settings struct {
+	PlugboardConnections string
 	RingSetting          RotorSetting
 	InitialPosition      RotorSetting
-	PlugboardConnections string
 }

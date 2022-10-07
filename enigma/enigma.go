@@ -5,36 +5,32 @@ import (
 )
 
 type Machine struct {
+	Reflector Reflector
 	RotorA    *Rotor
 	RotorB    *Rotor
 	RotorC    *Rotor
-	Reflector Reflector
 	plugboard Plugboard
 }
 
 func (e *Machine) rotate() {
 	if e.RotorA.rotate() {
-		// fmt.Println("rotor B should rotate!")
-
 		if e.RotorB.rotate() {
-			// fmt.Println("rotor C should rotate!")
 			e.RotorC.rotate()
 		}
 	}
-
-	// fmt.Printf("rotor position: %c%c%c\n", int2rune(e.RotorC.currentPos), int2rune(e.RotorB.currentPos), int2rune(e.RotorA.currentPos))
 }
 
 func (e *Machine) Init(settings Settings) error {
 	e.RotorA.init(settings.InitialPosition.a, settings.RingSetting.a)
 	e.RotorB.init(settings.InitialPosition.b, settings.RingSetting.b)
 	e.RotorC.init(settings.InitialPosition.c, settings.RingSetting.c)
-
 	e.Reflector.init()
+
 	err := e.plugboard.init(settings.PlugboardConnections)
 	if err != nil {
 		return errors.Wrap(err, "failed initialising plugboard")
 	}
+
 	return nil
 }
 
