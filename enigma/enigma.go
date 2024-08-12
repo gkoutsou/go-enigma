@@ -1,7 +1,7 @@
 package enigma
 
 import (
-	"github.com/pkg/errors"
+	"fmt"
 )
 
 type Machine struct {
@@ -28,7 +28,7 @@ func (e *Machine) Init(settings Settings) error {
 
 	err := e.plugboard.init(settings.PlugboardConnections)
 	if err != nil {
-		return errors.Wrap(err, "failed initialising plugboard")
+		return fmt.Errorf("failed initialising plugboard: %w", err)
 	}
 
 	return nil
